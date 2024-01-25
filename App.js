@@ -1,49 +1,83 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, SafeAreaView, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, SafeAreaView, StyleSheet } from 'react-native';
 
 export default function App() {
-  // Стан для зберігання списку завдань і поточного завдання
-  const [tasks, setTasks] = useState([]);
-  const [task, setTask] = useState('');
+  const [red, setRed] = useState(0);
+  const [green, setGreen] = useState(0);
+  const [blue, setBlue] = useState(0);
+  const [width, setWidth] = useState(100);
+  const [height, setHeight] = useState(100);
+  const [bgColor, setBgColor] = useState(`rgb(${red}, ${green}, ${blue})`);
 
-  const addTask = () => {
-    if (task.trim() !== '') {
-      const newTask = {
-        id: Math.random().toString(),
-        title: task,
-      };
-      setTasks([...tasks, newTask]);
-      setTask('');
-    }
+  // Оновлення кольору блоку
+  const updateColor = () => {
+    setBgColor(`rgb(${red}, ${green}, ${blue})`);
   };
 
-  const deleteTask = (taskId) => {
-    const updatedTasks = tasks.filter((item) => item.id !== taskId);
-    setTasks(updatedTasks);
+  // Збільшення розміру блоку
+  const increaseSize = () => {
+    setWidth((prevWidth) => prevWidth + 10);
+    setHeight((prevHeight) => prevHeight + 10);
+  };
+
+  // Зменшення розміру блоку
+  const decreaseSize = () => {
+    setWidth((prevWidth) => prevWidth - 10);
+    setHeight((prevHeight) => prevHeight - 10);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Органайзер справ</Text>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Введіть справу"
-          onChangeText={(text) => setTask(text)}
-          value={task}
-        />
-        <Button title="Додати" onPress={addTask} />
+      <Text style={styles.buttonText}>Increase/decrease button size</Text>
+
+      <View style={styles.buttonContainer}>
+        <View style={styles.buttonContainer1}>
+          <Button title="+" onPress={increaseSize} />
+        </View>
+        <View style={styles.buttonContainer1}>
+          <Button title="-" onPress={decreaseSize} />
+        </View>
       </View>
-      <FlatList
-        data={tasks}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.task}>
-            <Text>{item.title}</Text>
-            <Button title="Видалити" onPress={() => deleteTask(item.id)} />
-          </View>
-        )}
+      <View
+        style={{
+          width: width,
+          height: height,
+          backgroundColor: bgColor,
+        }}
+      ></View>
+      <TextInput
+        placeholder="Input R (0-255)"
+        keyboardType="numeric"
+        onChangeText={(text) => setRed(text)}
       />
+      <TextInput
+        placeholder="Input G (0-255)"
+        keyboardType="numeric"
+        onChangeText={(text) => setGreen(text)}
+      />
+      <TextInput
+        placeholder="Input B (0-255)"
+        keyboardType="numeric"
+        onChangeText={(text) => setBlue(text)}
+      />
+      <Button title="Change color" onPress={updateColor} />
+      <View style={styles.tableContainer}>
+        <View style={styles.tableRow}>
+          <View style={styles.tableCell}></View>
+          <View style={styles.tableCell}></View>
+          <View style={styles.tableCell}></View>
+        </View>
+        <View style={styles.tableRow}>
+          <View style={styles.tableCell}></View>
+          <View style={styles.tableCell}></View>
+          <View style={styles.tableCell}></View>
+        </View>
+        <View style={styles.tableRow}>
+          <View style={styles.tableCell}></View>
+          <View style={styles.tableCell}></View>
+          <View style={styles.tableCell}></View>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -51,31 +85,32 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 30,
-    marginBottom: 16,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    marginBottom: 16,
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    marginRight: 8,
-  },
-  task: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 8,
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  buttonContainer1: {
+    height: 50,
+    width: 50,
+    marginRight: 10,
+  },
+  buttonText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  tableContainer: {
+    flexDirection: 'column',
+  },
+  tableRow: {
+    flexDirection: 'row',
+  },
+  tableCell: {
+    width: 50,
+    height: 50,
+    backgroundColor: 'lightgray',
+    margin: 5,
   },
 });
