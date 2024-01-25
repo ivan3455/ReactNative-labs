@@ -1,116 +1,80 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, SafeAreaView, StyleSheet } from 'react-native';
+import { Button, StyleSheet, Alert } from 'react-native';
+import { Input, Heading, NativeBaseProvider, Text, Center, Stack } from 'native-base';
 
 export default function App() {
-  const [red, setRed] = useState(0);
-  const [green, setGreen] = useState(0);
-  const [blue, setBlue] = useState(0);
-  const [width, setWidth] = useState(100);
-  const [height, setHeight] = useState(100);
-  const [bgColor, setBgColor] = useState(`rgb(${red}, ${green}, ${blue})`);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  // Оновлення кольору блоку
-  const updateColor = () => {
-    setBgColor(`rgb(${red}, ${green}, ${blue})`);
+  // Об'єкт з користувачами та їхніми паролями
+  const users = {
+    testuser1: '12345678',
+    testuser2: '11111111',
   };
 
-  // Збільшення розміру блоку
-  const increaseSize = () => {
-    setWidth((prevWidth) => prevWidth + 10);
-    setHeight((prevHeight) => prevHeight + 10);
-  };
+  const styles = StyleSheet.create({
+    topContainer: {
+      marginTop: 40,
+      alignItems: 'center',
+    },
+    centerText: {
+      height: 40,
+      borderRadius: 10,
+      backgroundColor: 'lightgray',
+    },
+    inputField: {
+      borderWidth: 3,
+      borderColor: 'gray',
+      borderRadius: 8,
+      padding: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+  });
 
-  // Зменшення розміру блоку
-  const decreaseSize = () => {
-    setWidth((prevWidth) => prevWidth - 10);
-    setHeight((prevHeight) => prevHeight - 10);
+  // Функція для перевірки логіну та пароля
+  const userLogin = () => {
+    if (users[email] === password) {
+      Alert.alert('Successful', 'Authorization was successful', [
+        {
+          text: 'OK',
+        },
+      ]);
+    } else {
+      Alert.alert('Error', 'Incorrect login or password', [
+        {
+          text: 'OK',
+        },
+      ]);
+    }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.buttonText}>Increase/decrease button size</Text>
+    <NativeBaseProvider>
+      <Stack style={styles.topContainer}>
+        <Heading>Authotration</Heading>
+      </Stack>
 
-      <View style={styles.buttonContainer}>
-        <View style={styles.buttonContainer1}>
-          <Button title="+" onPress={increaseSize} />
-        </View>
-        <View style={styles.buttonContainer1}>
-          <Button title="-" onPress={decreaseSize} />
-        </View>
-      </View>
-      <View
-        style={{
-          width: width,
-          height: height,
-          backgroundColor: bgColor,
-        }}
-      ></View>
-      <TextInput
-        placeholder="Input R (0-255)"
-        keyboardType="numeric"
-        onChangeText={(text) => setRed(text)}
+      <Center style={styles.centerText}>Email:</Center>
+      <Input
+        placeholder="Enter Email..."
+        style={styles.inputField}
+        onChangeText={(text) => setEmail(text)}
+        value={email}
       />
-      <TextInput
-        placeholder="Input G (0-255)"
-        keyboardType="numeric"
-        onChangeText={(text) => setGreen(text)}
+
+      <Center style={styles.centerText}>Password:</Center>
+      <Input
+        placeholder="Enter Password..."
+        style={styles.inputField}
+        onChangeText={(text) => setPassword(text)}
+        value={password}
+        secureTextEntry={true}
       />
-      <TextInput
-        placeholder="Input B (0-255)"
-        keyboardType="numeric"
-        onChangeText={(text) => setBlue(text)}
-      />
-      <Button title="Change color" onPress={updateColor} />
-      <View style={styles.tableContainer}>
-        <View style={styles.tableRow}>
-          <View style={styles.tableCell}></View>
-          <View style={styles.tableCell}></View>
-          <View style={styles.tableCell}></View>
-        </View>
-        <View style={styles.tableRow}>
-          <View style={styles.tableCell}></View>
-          <View style={styles.tableCell}></View>
-          <View style={styles.tableCell}></View>
-        </View>
-        <View style={styles.tableRow}>
-          <View style={styles.tableCell}></View>
-          <View style={styles.tableCell}></View>
-          <View style={styles.tableCell}></View>
-        </View>
-      </View>
-    </SafeAreaView>
+
+      <Button title="Login" onPress={userLogin}>
+        <Text>Login</Text>
+      </Button>
+    </NativeBaseProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginTop: 10,
-  },
-  buttonContainer1: {
-    height: 50,
-    width: 50,
-    marginRight: 10,
-  },
-  buttonText: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  tableContainer: {
-    flexDirection: 'column',
-  },
-  tableRow: {
-    flexDirection: 'row',
-  },
-  tableCell: {
-    width: 50,
-    height: 50,
-    backgroundColor: 'lightgray',
-    margin: 5,
-  },
-});
